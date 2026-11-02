@@ -114,7 +114,7 @@ body{background-image:radial-gradient(900px 340px at 50% -120px,color-mix(in srg
 .passos li{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--muted);min-width:0}
 .passos b{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;background:var(--surface-2);color:var(--muted);flex:none}
 .passos li.on{color:var(--ink)} .passos li.on b{background:var(--coral);color:var(--on-coral)}
-.passos li.ok b{background:var(--indigo);color:var(--on-indigo)}
+.passos li.feito b{background:var(--indigo);color:var(--on-indigo)}
 .passos span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .n{border-radius:10px;min-height:42px;box-shadow:0 1px 0 color-mix(in srgb,var(--ink) 6%,transparent)}
 .n.sel{transform:scale(1.05);box-shadow:0 4px 12px color-mix(in srgb,var(--coral) 45%,transparent)}
@@ -140,6 +140,52 @@ body{background-image:radial-gradient(900px 340px at 50% -120px,color-mix(in srg
 .cart{animation:sobe .28s cubic-bezier(.2,.8,.2,1) both}
 .n.sel{animation:pula .25s ease both}
 .bar i{transition:width .8s cubic-bezier(.2,.8,.2,1)}
+/* Situação de cada número: livre, sua escolha, aguardando Pix, vendido e os seus (o participante reconhece os dele). */
+.n:disabled{text-decoration:none}
+.n.res{background:var(--ambar-soft);border:1.5px dashed color-mix(in srgb,var(--ambar) 75%,transparent);color:color-mix(in srgb,var(--ink) 72%,transparent)}
+.n.vend{background:var(--surface-2);border-color:transparent;color:color-mix(in srgb,var(--muted) 80%,transparent)}
+.n.meu{position:relative;color:var(--ink);opacity:1}
+.n.meu.res{background:var(--ambar-soft);border:2px solid var(--ambar)}
+.n.meu.pago{background:var(--indigo);border-color:var(--indigo);color:var(--on-indigo)}
+.n.meu::after{content:"seu";position:absolute;top:-7px;right:-4px;font:700 9px/1 var(--f-body);letter-spacing:.04em;text-transform:uppercase;padding:2px 4px;border-radius:5px;background:var(--ambar);color:#2B1D00}
+.n.meu.pago::after{content:"✓";background:var(--coral);color:var(--on-coral);font-size:10px;padding:2px 4px}
+.dot.d-sel{background:var(--coral);border-color:var(--coral)}
+.tag-seu{font:700 9px/1 var(--f-body);letter-spacing:.04em;padding:3px 4px;border-radius:5px;background:var(--ambar);color:#2B1D00}
+.dot.d-res{background:var(--ambar-soft);border:1.5px dashed var(--ambar)}
+.dot.d-vend{background:var(--surface-2);border-color:transparent}
+.passos{display:flex;justify-content:space-between;gap:6px}
+.passos li{gap:5px;font-size:12px}
+@media (max-width:400px){.passos li{font-size:11.5px}.passos b{width:22px;height:22px}}
+/* Seus números: um cartão por pedido feito neste aparelho. */
+.meus{display:flex;flex-direction:column;gap:8px;background:var(--surface-2);border-radius:16px;padding:12px}
+.meus h3{font-size:16px}
+.pedido{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.pedido-topo{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;flex-wrap:wrap}
+.pill{font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px}
+.pill.aguardando,.pill.carregando{background:var(--ambar-soft);color:color-mix(in srgb,var(--ink) 85%,var(--ambar))}
+.pill.pago{background:var(--indigo);color:var(--on-indigo)}
+.pill.expirado{background:var(--erro-soft);color:var(--erro)}
+.chips span.pago{background:var(--indigo);color:var(--on-indigo)}
+.chips span.expirado{background:var(--surface-2);color:var(--muted);text-decoration:line-through}
+.chips.grandes{justify-content:center}
+.chips.grandes span{font-size:17px;padding:6px 12px;border-radius:9px}
+.btn-mini{min-height:36px;padding:6px 14px;font-size:13px;border-radius:10px}
+/* Situação do pedido no topo da tela do Pix. */
+.status{width:100%;border-radius:18px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.status h2{font-size:24px}
+.status p{margin:0}
+.status.aguardando{flex-direction:row;align-items:flex-start;text-align:left;background:var(--ambar-soft);border:1px solid color-mix(in srgb,var(--ambar) 55%,transparent)}
+.status.aguardando b{font-size:16px}
+.status.pago{background:linear-gradient(160deg,var(--indigo),color-mix(in srgb,var(--indigo) 70%,#000));color:var(--on-indigo)}
+.status.pago .chips span{background:color-mix(in srgb,var(--on-indigo) 18%,transparent);color:var(--on-indigo)}
+.status.expirado{background:var(--erro-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--erro) 40%,transparent)}
+.selo-ok{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-size:30px;font-weight:800;background:var(--coral);color:var(--on-coral)}
+.pulso{width:12px;height:12px;border-radius:50%;background:var(--ambar);flex:none;margin-top:5px;animation:pulso 1.4s ease-in-out infinite}
+@keyframes pulso{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ambar) 60%,transparent)}50%{box-shadow:0 0 0 8px transparent}}
+.festa{animation:festa .7s cubic-bezier(.2,1.4,.4,1) both}
+.festa .selo-ok{animation:carimbo .6s .15s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes festa{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}
+@keyframes carimbo{from{transform:scale(0) rotate(-30deg)}to{transform:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -177,9 +223,44 @@ function pix(r, valor, ref) {
 
 /* ---------- estado ---------- */
 const id = new URLSearchParams(location.search).get("r");
-const st = { rifa: null, ocupados: new Set(), info: new Map(), sel: [], enviando2: false, etapa: "grade", faixa: 0, erro: "", enviando: false, reserva: null };
-const LS = "cartela-reserva-" + id;
-try { const s = JSON.parse(localStorage.getItem(LS) || "null"); if (s) { st.reserva = s; st.etapa = "pix" } } catch (e) { }
+const st = { rifa: null, ocupados: new Set(), info: new Map(), sel: [], enviando2: false, etapa: "grade", faixa: 0, erro: "", enviando: false, reserva: null, pedidos: [], carregou: false, festa: "" };
+
+/* Pedidos deste aparelho: a página lembra quais números são seus, para mostrar a situação de cada um. Fica só no celular. */
+const LS = "cartela-pedidos-" + id, LS_ANTIGO = "cartela-reserva-" + id;
+function lerPedidos() {
+  try {
+    const l = JSON.parse(localStorage.getItem(LS) || "null"); if (Array.isArray(l)) return l;
+    const a = JSON.parse(localStorage.getItem(LS_ANTIGO) || "null"); return a ? [a] : [];
+  } catch (e) { return [] }
+}
+function salvarPedidos() { try { localStorage.setItem(LS, JSON.stringify(st.pedidos)); localStorage.removeItem(LS_ANTIGO) } catch (e) { } }
+st.pedidos = lerPedidos();
+if (st.pedidos.length) { st.reserva = st.pedidos[st.pedidos.length - 1]; st.etapa = "pix" }
+
+/* Situação de um pedido pelo que a cartela pública mostra: "pago", "aguardando", "expirado" ou "carregando". */
+const centavos = p => p.valorCent || Math.round(p.total * 100);
+function situacao(p) {
+  if (!st.carregou) return "carregando";
+  const meus = p.nums.map(n => st.info.get(n)).filter(d => d && (!d.v || d.v === centavos(p)));
+  if (meus.length === p.nums.length && meus.every(d => d.status === "pago")) return "pago";
+  if (meus.some(d => d.status === "reservado")) return "aguardando";
+  return meus.some(d => d.status === "pago") ? "pago" : "expirado";
+}
+/* Tempo que falta para pagar, contado da hora da reserva gravada no servidor. */
+function prazo(p) {
+  const ts = p.nums.map(n => st.info.get(n)?.ts?.toMillis?.()).filter(Boolean);
+  if (!ts.length || !st.rifa) return "";
+  const falta = Math.min(...ts) + st.rifa.prazoHoras * 3600e3 - Date.now();
+  if (falta <= 0) return "O prazo acabou, mas o organizador ainda pode confirmar";
+  const h = Math.floor(falta / 3600e3), m = Math.floor(falta % 3600e3 / 60e3);
+  return `Pague em até ${h ? h + " h " : ""}${m} min`;
+}
+/* Número → pedido deste aparelho que ainda vale (não expirado). */
+function meusNumeros() {
+  const m = new Map();
+  for (const p of st.pedidos) { const s = situacao(p); if (s !== "expirado") for (const n of p.nums) m.set(n, s) }
+  return m;
+}
 
 const pad = n => String(n).padStart(String(st.rifa.qtd).length, "0");
 let tt; function toast(t) { const el = $("#toast"); el.textContent = t; el.hidden = false; clearTimeout(tt); tt = setTimeout(() => el.hidden = true, 2800) }
@@ -198,10 +279,22 @@ else {
   onSnapshot(collection(ref, "numeros"), s => {
     st.info = new Map(s.docs.map(d => [+d.id, d.data()]));
     st.ocupados = new Set(st.info.keys());
+    st.carregou = true;
+    // Pedido que acabou de ser confirmado: comemora uma vez só (fica marcado no aparelho).
+    for (const p of st.pedidos) if (!p.avisado && situacao(p) === "pago") {
+      p.avisado = true; salvarPedidos(); st.festa = p.grupo;
+      // Mostra a confirmação, a não ser que a pessoa esteja preenchendo outra reserva.
+      if (st.etapa !== "form") { st.reserva = p; st.etapa = "pix" }
+      toast("Pagamento confirmado! Seus números estão garantidos.");
+      try { navigator.vibrate?.([60, 40, 120]) } catch (e) { }
+    }
     const antes = st.sel.length; st.sel = st.sel.filter(n => !st.ocupados.has(n));
     if (antes !== st.sel.length && st.etapa !== "pix") toast("Alguém acabou de pegar um número que você tinha escolhido");
     if (st.rifa) render();
   });
+
+  // O prazo para pagar corre a cada minuto enquanto o Pix está na tela.
+  setInterval(() => { if (st.rifa && st.etapa === "pix" && st.reserva && situacao(st.reserva) === "aguardando") render() }, 60e3);
 
   window.reservar = async (ev) => {
     ev.preventDefault();
@@ -222,8 +315,8 @@ else {
     try {
       await b.commit();
       const total = valorCent / 100;
-      st.reserva = { nums, total, payload: pix(st.rifa, total, grupo), grupo, comprovante: false };
-      try { localStorage.setItem(LS, JSON.stringify(st.reserva)) } catch (e) { }
+      st.reserva = { nums, total, valorCent, payload: pix(st.rifa, total, grupo), grupo, comprovante: false, nome: nome.slice(0, 60), quando: Date.now() };
+      st.pedidos.push(st.reserva); salvarPedidos();
       st.sel = []; st.etapa = "pix"; scrollTo(0, 0);
     } catch (e) {
       st.erro = "Um desses números acabou de ser escolhido por outra pessoa. Confira a cartela e tente de novo.";
@@ -243,14 +336,29 @@ function render() {
     <dl class="facts"><div><dt>Cada número</dt><dd>${brl(r.preco)}</dd></div><div><dt>Sorteio</dt><dd>${esc(r.data || "a definir")}</dd></div><div><dt>Como</dt><dd>${metodo}</dd></div></dl>
     <div><div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${(usados / r.qtd * 100).toFixed(2)}%"></i></div><p class="small">${sorteada ? `${usados} de ${r.qtd} números vendidos` : `<b>${restam} números livres</b> · ${pct}% já escolhidos`}</p></div></header>
     <div class="perf" aria-hidden="true"></div><div class="corpo">${sorteada ? "" : passos()}${corpo(r)}</div>`;
-  if (st.etapa === "pix" && st.reserva && window.QRCode) {
-    const el = $("#qr"); el.innerHTML = "";
+  const el = $("#qr");
+  if (el && st.reserva && window.QRCode) {
+    el.innerHTML = "";
     try { new QRCode(el, { text: st.reserva.payload, width: 180, height: 180, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M }) } catch (e) { el.hidden = true }
   }
+  st.festa = "";
 }
 function passos() {
-  const e = st.etapa === "pix" ? 3 : st.etapa === "form" ? 2 : 1, nomes = ["Escolher", "Seus dados", "Pagar"];
-  return `<ol class="passos" aria-label="Etapas">${nomes.map((n, i) => `<li class="${i + 1 === e ? "on" : i + 1 < e ? "ok" : ""}"><b>${i + 1 < e ? "✓" : i + 1}</b><span>${n}</span></li>`).join("")}</ol>`;
+  const pago = st.etapa === "pix" && st.reserva && situacao(st.reserva) === "pago";
+  const e = pago ? 5 : st.etapa === "pix" ? 3 : st.etapa === "form" ? 2 : 1, nomes = ["Escolher", "Dados", "Pagar", "Confirmado"];
+  return `<ol class="passos" aria-label="Etapas">${nomes.map((n, i) => `<li class="${i + 1 === e ? "on" : i + 1 < e ? "feito" : ""}"><b>${i + 1 < e ? "✓" : i + 1}</b><span>${n}</span></li>`).join("")}</ol>`;
+}
+const ROTULO = { pago: "Confirmado", aguardando: "Aguardando Pix", expirado: "Expirado", carregando: "Conferindo…" };
+/* Painel com os pedidos feitos neste aparelho, cada um com a situação ao vivo. */
+function seusNumeros() {
+  if (!st.pedidos.length) return "";
+  const itens = st.pedidos.slice().reverse().map(p => {
+    const s = situacao(p);
+    return `<div class="pedido"><div class="pedido-topo"><span class="pill ${s}">${s === "pago" ? "✓ " : ""}${ROTULO[s]}</span><span class="small muted">${esc(p.nome || "")}${p.nome ? " · " : ""}${brl(p.total)}</span></div>
+      <div class="chips">${p.nums.map(n => `<span class="${s}">${pad(n)}</span>`).join("")}</div>
+      ${s === "aguardando" ? `<button class="btn btn-mini" data-ver="${esc(p.grupo)}">Ver o Pix</button>` : s === "expirado" ? `<button class="btn btn-mini" data-tirar="${esc(p.grupo)}">Remover da lista</button>` : ""}</div>`;
+  }).join("");
+  return `<section class="meus" aria-label="Seus números"><h3>Seus números</h3>${itens}</section>`;
 }
 function faixas(r) {
   if (r.qtd <= FAIXA) return "";
@@ -258,27 +366,45 @@ function faixas(r) {
   return `<div class="faixas">${h}</div>`;
 }
 function grade(r, travada) {
-  const ini = st.faixa * FAIXA + 1, fim = Math.min(r.qtd, (st.faixa + 1) * FAIXA); let h = "";
+  const ini = st.faixa * FAIXA + 1, fim = Math.min(r.qtd, (st.faixa + 1) * FAIXA), meus = meusNumeros(); let h = "";
   for (let n = ini; n <= fim; n++) {
-    const win = r.vencedor && r.vencedor.numero === n;
-    if (st.ocupados.has(n) || travada) h += `<button class="n${win ? " win" : ""}" disabled aria-label="Número ${pad(n)} indisponível">${pad(n)}</button>`;
+    const win = r.vencedor && r.vencedor.numero === n, d = st.info.get(n), meu = meus.get(n);
+    if (st.ocupados.has(n) || travada) {
+      // Seus números em destaque; dos outros, "aguardando Pix" é diferente de "vendido".
+      const cls = meu ? (meu === "pago" ? "meu pago" : "meu res") : d?.status === "pago" ? "vend" : d ? "res" : "";
+      const txt = meu ? (meu === "pago" ? "seu, pago" : "seu, aguardando Pix") : d?.status === "pago" ? "vendido" : d ? "reservado, aguardando Pix" : "indisponível";
+      h += `<button class="n ${cls}${win ? " win" : ""}" disabled aria-label="Número ${pad(n)}: ${txt}">${pad(n)}</button>`;
+    }
     else { const s = st.sel.includes(n); h += `<button class="n${s ? " sel" : ""}" data-n="${n}" aria-pressed="${s}">${pad(n)}</button>` }
   }
   return `<div class="grid">${h}</div>`;
 }
 function corpo(r) {
   if (r.status === "sorteada" && r.vencedor) {
-    return `<div class="winner"><span class="big">${pad(r.vencedor.numero)}</span><div><span class="eyebrow muted">Resultado</span><h3>${esc(r.vencedor.primeiroNome || "Ganhador")} ganhou!</h3><p class="small">${esc(r.vencedor.detalhe || "")}</p></div></div>${faixas(r)}${grade(r, true)}<div style="height:18px"></div>`;
+    const meus = meusNumeros(), ganhei = meus.get(r.vencedor.numero) === "pago";
+    return `${ganhei ? `<div class="status pago festa"><span class="selo-ok" aria-hidden="true">★</span><h2>Você ganhou!</h2><p>O número ${pad(r.vencedor.numero)} é seu. ${esc(r.pixNome)} vai falar com você pelo WhatsApp.</p></div>` : ""}
+      <div class="winner"><span class="big">${pad(r.vencedor.numero)}</span><div><span class="eyebrow muted">Resultado</span><h3>${esc(r.vencedor.primeiroNome || "Ganhador")} ganhou!</h3><p class="small">${esc(r.vencedor.detalhe || "")}</p></div></div>${seusNumeros()}${faixas(r)}${grade(r, true)}<div style="height:18px"></div>`;
   }
   if (st.etapa === "pix" && st.reserva) {
-    const rv = st.reserva;
-    return `<div class="pix"><span class="ok">Reservados: ${rv.nums.map(pad).join(", ")}</span><span class="eyebrow muted">Pague com Pix</span><span class="valor">${brl(rv.total)}</span>
+    const rv = st.reserva, s = situacao(rv), nums = `<div class="chips grandes">${rv.nums.map(n => `<span class="${s}">${pad(n)}</span>`).join("")}</div>`;
+    const como = r.metodo === "federal" ? "pela Loteria Federal" : "no app, ao vivo";
+    if (s === "pago") return `<div class="pix"><div class="status pago${st.festa === rv.grupo ? " festa" : ""}"><span class="selo-ok" aria-hidden="true">✓</span>
+        <h2>Pagamento confirmado!</h2><p>Seus números estão garantidos.</p>${nums}
+        <p class="small">${rv.nome ? `Reservado para <b>${esc(rv.nome)}</b> · ` : ""}${brl(rv.total)} · código <b>${codigo(id + rv.grupo)}</b></p></div>
+        <p class="small muted">Sorteio ${esc(r.data || "em data a definir")}, ${como}. Boa sorte! Se ganhar, ${esc(r.pixNome)} fala com você pelo WhatsApp. Guarde este link: ele mostra seus números quando quiser.</p>
+        <button class="btn btn-main" data-act="mais">Escolher mais números</button><button class="btn" data-act="cartela">Ver a cartela</button></div>`;
+    if (s === "expirado") return `<div class="pix"><div class="status expirado"><h2>Reserva expirada</h2>${nums}
+        <p>O prazo para pagar acabou e esses números voltaram a ficar livres. Se você já pagou, mande o comprovante para ${esc(r.pixNome)}.</p></div>
+        <button class="btn btn-main" data-act="mais">Escolher números de novo</button></div>`;
+    return `<div class="pix"><div class="status aguardando"><span class="pulso" aria-hidden="true"></span><div><b>${s === "carregando" ? "Conferindo seu pedido…" : "Aguardando seu Pix"}</b>
+        <p class="small">${prazo(rv) || `Pague em até ${r.prazoHoras} h`}. Esta tela muda sozinha quando o pagamento for confirmado: pode deixar aberta ou voltar depois por este mesmo link.</p></div></div>
+      ${nums}<span class="eyebrow muted">Pague com Pix</span><span class="valor">${brl(rv.total)}</span>
       <div id="qr" aria-label="QR Code do Pix"></div><span class="code" id="pixcode">${esc(rv.payload)}</span>
       <button class="btn btn-main" data-act="copiar">Copiar Pix copia e cola</button>
       <p class="exato">Pague exatamente ${brl(rv.total)}. Os centavos identificam o seu pedido.</p>
-      <p class="small muted">O dinheiro vai direto para ${esc(r.pixNome)}. Pague em até ${r.prazoHoras} h, senão os números voltam a ficar livres. Pagando pelo código acima, o valor já vai certo.</p>
+      <p class="small muted">O dinheiro vai direto para ${esc(r.pixNome)}. Pagando pelo código acima, o valor já vai certo. Depois do prazo, os números voltam a ficar livres.</p>
       ${rv.comprovante
-        ? `<p class="ok">Comprovante enviado. O organizador vai conferir.</p>`
+        ? `<p class="ok">Comprovante enviado. Falta o organizador conferir.</p>`
         : `<label class="btn" for="comp">${st.enviando2 ? "Enviando…" : "Enviar comprovante (opcional)"}</label><input id="comp" type="file" accept="image/*" hidden>
            <p class="small muted">Se quiser agilizar, anexe o print do pagamento.</p>`}
       <button class="btn" data-act="mais">Escolher mais números</button></div>`;
@@ -292,7 +418,7 @@ function corpo(r) {
       <div class="row"><button type="button" class="btn" data-act="voltar">Voltar</button><button class="btn btn-main" type="submit"${st.enviando ? " disabled" : ""}>${st.enviando ? "Reservando…" : "Reservar " + brl(nums.length * r.preco)}</button></div></form>`;
   }
   const tot = st.sel.length * r.preco;
-  return `${st.erro ? `<p class="err">${esc(st.erro)}</p>` : ""}<div class="legenda"><span><span class="dot"></span>Livre</span><span><span class="dot" style="background:var(--coral);border-color:var(--coral)"></span>Sua escolha</span><span><span class="dot" style="background:var(--surface-2);border-color:transparent"></span>Já escolhido</span></div>
+  return `${st.erro ? `<p class="err">${esc(st.erro)}</p>` : ""}${seusNumeros()}<div class="legenda"><span><span class="dot"></span>Livre</span><span><span class="dot d-sel"></span>Sua escolha</span>${st.pedidos.length ? `<span><span class="tag-seu">SEU</span>Seus</span>` : ""}<span><span class="dot d-res"></span>Aguardando Pix</span><span><span class="dot d-vend"></span>Vendido</span></div>
     ${faixas(r)}${grade(r, false)}
     <div class="cart"><span>${st.sel.length ? `<b>${st.sel.length}</b> número${st.sel.length > 1 ? "s" : ""} · <b>${brl(tot)}</b>` : '<span class="muted">Toque nos números livres</span>'}</span>
     <button class="btn btn-main" data-act="form"${st.sel.length ? "" : " disabled"}>Reservar</button></div>`;
@@ -326,7 +452,7 @@ document.addEventListener("change", async e => {
     b.set(doc(ref, "enviados", g), { n, ts: serverTimestamp() });
     await b.commit();
     st.reserva.comprovante = true;
-    try { localStorage.setItem(LS, JSON.stringify(st.reserva)) } catch (e) { }
+    salvarPedidos();
     toast("Comprovante enviado");
   } catch (err) {
     toast("Não deu para enviar a imagem. Tente de novo ou mande para o organizador.");
@@ -340,7 +466,9 @@ document.addEventListener("click", e => {
   else if (t.dataset.faixa) { st.faixa = +t.dataset.faixa; render() }
   else if (t.dataset.act === "form") { st.etapa = "form"; st.erro = ""; render(); $("#nome")?.focus() }
   else if (t.dataset.act === "voltar") { st.etapa = "grade"; render() }
-  else if (t.dataset.act === "mais") { st.etapa = "grade"; st.reserva = null; try { localStorage.removeItem(LS) } catch (e) { } render() }
+  else if (t.dataset.act === "mais" || t.dataset.act === "cartela") { st.etapa = "grade"; st.reserva = null; render(); scrollTo(0, 0) }
+  else if (t.dataset.ver) { st.reserva = st.pedidos.find(p => p.grupo === t.dataset.ver) || null; st.etapa = st.reserva ? "pix" : "grade"; render(); scrollTo(0, 0) }
+  else if (t.dataset.tirar) { st.pedidos = st.pedidos.filter(p => p.grupo !== t.dataset.tirar); salvarPedidos(); render() }
   else if (t.dataset.act === "copiar") {
     navigator.clipboard.writeText(st.reserva.payload).then(() => toast("Pix copiado. Cole no app do seu banco."), () => {
       const rg = document.createRange(); rg.selectNodeContents($("#pixcode")); const s = getSelection(); s.removeAllRanges(); s.addRange(rg); toast("Código selecionado. Copie e cole no app do banco.");
