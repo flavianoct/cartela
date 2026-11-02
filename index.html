@@ -186,6 +186,52 @@ body{background-image:radial-gradient(900px 340px at 50% -120px,color-mix(in srg
 .festa .selo-ok{animation:carimbo .6s .15s cubic-bezier(.2,1.6,.4,1) both}
 @keyframes festa{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}
 @keyframes carimbo{from{transform:scale(0) rotate(-30deg)}to{transform:none}}
+/* ---------- Mais vida: cabeçalho em movimento, brilhos, bilhete dourado e confete (sem verde) ---------- */
+body{background-image:radial-gradient(900px 340px at 50% -120px,color-mix(in srgb,var(--indigo) 26%,transparent),transparent 70%),radial-gradient(600px 400px at 110% 110%,color-mix(in srgb,var(--coral) 14%,transparent),transparent 70%);background-attachment:fixed}
+.t-head{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(135deg,var(--indigo) 0%,color-mix(in srgb,var(--indigo) 62%,#8A3FFC) 45%,color-mix(in srgb,var(--indigo) 70%,#000) 100%);background-size:220% 220%;animation:ondas 14s ease-in-out infinite}
+.t-head::before{content:"";position:absolute;z-index:-1;width:340px;height:240px;right:-120px;top:-110px;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--coral) 55%,transparent),transparent);filter:blur(6px);animation:bolha 9s ease-in-out infinite alternate}
+.t-head::after{content:"";position:absolute;z-index:-1;width:260px;height:200px;left:-110px;bottom:-120px;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--ambar) 40%,transparent),transparent);animation:bolha 11s ease-in-out infinite alternate-reverse}
+.deco span{position:absolute;z-index:-1;font:800 44px/1 var(--f-mono);color:#fff;opacity:.09;animation:flutua 7s ease-in-out infinite;pointer-events:none}
+.deco span:nth-child(1){right:18px;top:54px;transform:rotate(-12deg)}
+.deco span:nth-child(2){right:92px;top:118px;font-size:30px;animation-delay:-2s;transform:rotate(9deg)}
+.deco span:nth-child(3){right:26px;bottom:78px;font-size:36px;animation-delay:-4s;transform:rotate(-6deg)}
+@keyframes ondas{0%,100%{background-position:0% 30%}50%{background-position:100% 70%}}
+@keyframes bolha{to{transform:translate(-40px,30px) scale(1.15)}}
+@keyframes flutua{0%,100%{translate:0 0}50%{translate:0 -10px}}
+.premio{position:relative;overflow:hidden;border:1px solid color-mix(in srgb,var(--on-indigo) 22%,transparent)}
+.premio svg{color:var(--ambar);filter:drop-shadow(0 0 6px color-mix(in srgb,var(--ambar) 60%,transparent))}
+.premio::after,.btn-main::after,.status.pago::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.38) 50%,transparent 65%);transform:translateX(-120%);animation:reflexo 3.6s ease-in-out infinite;pointer-events:none}
+@keyframes reflexo{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.bar{height:8px}
+.bar i{background:linear-gradient(90deg,var(--coral),var(--ambar));background-size:200% 100%;position:relative;overflow:hidden}
+.bar i::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.22) 0 6px,transparent 6px 12px);animation:listras 1.2s linear infinite}
+@keyframes listras{to{background-position:24px 0}}
+.n:not(:disabled):hover{box-shadow:0 0 0 3px color-mix(in srgb,var(--indigo) 22%,transparent),0 6px 14px color-mix(in srgb,var(--indigo) 18%,transparent)}
+.n.sel{background:linear-gradient(135deg,var(--coral),#FFB347);border-color:transparent;color:var(--on-coral);box-shadow:0 6px 18px color-mix(in srgb,var(--coral) 50%,transparent)}
+.n.meu.pago{background:linear-gradient(135deg,var(--indigo),color-mix(in srgb,var(--indigo) 60%,#8A3FFC));box-shadow:0 4px 14px color-mix(in srgb,var(--indigo) 40%,transparent)}
+.btn-main{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--coral),color-mix(in srgb,var(--coral) 60%,#FFB347))}
+.btn-main:disabled::after{display:none}
+.cart{position:sticky}
+.cart::before{content:"";position:absolute;left:24px;right:24px;top:-1px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--indigo),var(--coral),var(--ambar),var(--indigo));background-size:200% 100%;animation:ondas 6s linear infinite}
+.meus{background:linear-gradient(160deg,var(--surface-2),color-mix(in srgb,var(--indigo) 10%,var(--surface-2)))}
+/* Aguardando: borda que corre e o prazo grande. */
+.status.aguardando{border:2px solid transparent;background:linear-gradient(var(--ambar-soft),var(--ambar-soft)) padding-box,linear-gradient(90deg,var(--ambar),var(--coral),var(--ambar),var(--coral)) border-box;background-size:100% 100%,300% 100%;animation:borda 4s linear infinite}
+@keyframes borda{to{background-position:0 0,300% 0}}
+.relogio{display:flex;align-items:baseline;gap:6px;margin:2px 0 4px;font-family:var(--f-display)}
+.relogio b{font-size:26px;font-weight:800;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.relogio small{font:600 13px var(--f-body);color:var(--muted)}
+/* Bilhete dourado: recortes laterais, picote, carimbo PAGO e brilho passando. */
+.status.pago{position:relative;overflow:hidden;color:#2B0A04;background:linear-gradient(135deg,#FFD66B 0%,#FFB347 40%,#FF7A59 100%);box-shadow:0 18px 40px color-mix(in srgb,var(--coral) 35%,transparent);padding:22px 18px 18px;
+  -webkit-mask:radial-gradient(circle 13px at 0 64%,transparent 12.5px,#000 13px) left/51% 100% no-repeat,radial-gradient(circle 13px at 100% 64%,transparent 12.5px,#000 13px) right/51% 100% no-repeat;
+  mask:radial-gradient(circle 13px at 0 64%,transparent 12.5px,#000 13px) left/51% 100% no-repeat,radial-gradient(circle 13px at 100% 64%,transparent 12.5px,#000 13px) right/51% 100% no-repeat}
+.status.pago .chips span{background:rgba(43,10,4,.12);color:#2B0A04}
+.status.pago .selo-ok{background:#fff;color:#FF6B57;box-shadow:0 6px 16px rgba(43,10,4,.25)}
+.status.pago h2{font-size:28px}
+.picote{width:100%;border-top:2px dashed rgba(43,10,4,.3);margin:6px 0 2px}
+.carimbo{position:absolute;top:14px;right:12px;border:3px solid rgba(43,10,4,.75);color:rgba(43,10,4,.8);border-radius:8px;padding:2px 8px;font:800 15px/1.2 var(--f-display);letter-spacing:.08em;transform:rotate(12deg)}
+.festa .carimbo{animation:carimbar .5s .45s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes carimbar{from{transform:rotate(12deg) scale(2.4);opacity:0}to{transform:rotate(12deg) scale(1);opacity:1}}
+.confete{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:20}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -251,9 +297,32 @@ function prazo(p) {
   const ts = p.nums.map(n => st.info.get(n)?.ts?.toMillis?.()).filter(Boolean);
   if (!ts.length || !st.rifa) return "";
   const falta = Math.min(...ts) + st.rifa.prazoHoras * 3600e3 - Date.now();
-  if (falta <= 0) return "O prazo acabou, mas o organizador ainda pode confirmar";
+  if (falta <= 0) return "";
   const h = Math.floor(falta / 3600e3), m = Math.floor(falta % 3600e3 / 60e3);
-  return `Pague em até ${h ? h + " h " : ""}${m} min`;
+  return `${h ? h + " h " : ""}${m} min`;
+}
+
+/* Chuva de confete (cores da marca, sem verde). Some sozinha em ~3 s. */
+function confete() {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const c = document.createElement("canvas"); c.className = "confete"; document.body.appendChild(c);
+  const ctx = c.getContext("2d"), k = devicePixelRatio || 1, W = c.width = innerWidth * k, H = c.height = innerHeight * k;
+  const cores = ["#FF6B57", "#FFC857", "#8E8CF5", "#3F3DBC", "#FFFFFF", "#FF8FB1"];
+  const ps = Array.from({ length: 170 }, () => ({
+    x: W / 2 + (Math.random() - .5) * W * .4, y: H * .38, vx: (Math.random() - .5) * 17 * k, vy: (-Math.random() * 15 - 6) * k,
+    r: (4 + Math.random() * 5) * k, a: Math.random() * 6.3, va: (Math.random() - .5) * .35, cor: cores[Math.random() * cores.length | 0], fita: Math.random() < .6,
+  }));
+  const t0 = performance.now();
+  (function quadro(t) {
+    ctx.clearRect(0, 0, W, H);
+    for (const p of ps) {
+      p.vy += .38 * k; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.a += p.va;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a); ctx.fillStyle = p.cor;
+      if (p.fita) ctx.fillRect(-p.r, -p.r / 2.5, p.r * 2, p.r / 1.25); else { ctx.beginPath(); ctx.arc(0, 0, p.r * .6, 0, 7); ctx.fill() }
+      ctx.restore();
+    }
+    if (t - t0 < 3200) requestAnimationFrame(quadro); else c.remove();
+  })(t0);
 }
 /* Número → pedido deste aparelho que ainda vale (não expirado). */
 function meusNumeros() {
@@ -331,7 +400,7 @@ function render() {
   const r = st.rifa; if (!r) return;
   const usados = st.ocupados.size, metodo = r.metodo === "federal" ? "Loteria Federal" : "No app";
   const sorteada = r.status === "sorteada", restam = r.qtd - usados, pct = Math.round(usados / r.qtd * 100);
-  $("#app").innerHTML = `<header class="t-head"><div class="t-top"><span class="eyebrow">Rifa de ${esc(r.pixNome)}</span><span class="chip${sorteada ? " done" : ""}">${sorteada ? "Sorteada" : "Aberta"}</span></div>
+  $("#app").innerHTML = `<header class="t-head"><div class="deco" aria-hidden="true"><span>07</span><span>21</span><span>42</span></div><div class="t-top"><span class="eyebrow">Rifa de ${esc(r.pixNome)}</span><span class="chip${sorteada ? " done" : ""}">${sorteada ? "Sorteada" : "Aberta"}</span></div>
     <h1>${esc(r.nome)}</h1><div class="premio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M5 12v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg><span>${esc(r.premio)}</span></div>
     <dl class="facts"><div><dt>Cada número</dt><dd>${brl(r.preco)}</dd></div><div><dt>Sorteio</dt><dd>${esc(r.data || "a definir")}</dd></div><div><dt>Como</dt><dd>${metodo}</dd></div></dl>
     <div><div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${(usados / r.qtd * 100).toFixed(2)}%"></i></div><p class="small">${sorteada ? `${usados} de ${r.qtd} números vendidos` : `<b>${restam} números livres</b> · ${pct}% já escolhidos`}</p></div></header>
@@ -341,6 +410,7 @@ function render() {
     el.innerHTML = "";
     try { new QRCode(el, { text: st.reserva.payload, width: 180, height: 180, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M }) } catch (e) { el.hidden = true }
   }
+  if (st.festa) confete();
   st.festa = "";
 }
 function passos() {
@@ -382,22 +452,26 @@ function grade(r, travada) {
 function corpo(r) {
   if (r.status === "sorteada" && r.vencedor) {
     const meus = meusNumeros(), ganhei = meus.get(r.vencedor.numero) === "pago";
+    // Confete uma vez só para quem ganhou (marcado no aparelho).
+    if (ganhei) try { if (!localStorage.getItem("cartela-ganhou-" + id)) { localStorage.setItem("cartela-ganhou-" + id, "1"); st.festa = "ganhou" } } catch (e) { }
     return `${ganhei ? `<div class="status pago festa"><span class="selo-ok" aria-hidden="true">★</span><h2>Você ganhou!</h2><p>O número ${pad(r.vencedor.numero)} é seu. ${esc(r.pixNome)} vai falar com você pelo WhatsApp.</p></div>` : ""}
       <div class="winner"><span class="big">${pad(r.vencedor.numero)}</span><div><span class="eyebrow muted">Resultado</span><h3>${esc(r.vencedor.primeiroNome || "Ganhador")} ganhou!</h3><p class="small">${esc(r.vencedor.detalhe || "")}</p></div></div>${seusNumeros()}${faixas(r)}${grade(r, true)}<div style="height:18px"></div>`;
   }
   if (st.etapa === "pix" && st.reserva) {
     const rv = st.reserva, s = situacao(rv), nums = `<div class="chips grandes">${rv.nums.map(n => `<span class="${s}">${pad(n)}</span>`).join("")}</div>`;
     const como = r.metodo === "federal" ? "pela Loteria Federal" : "no app, ao vivo";
-    if (s === "pago") return `<div class="pix"><div class="status pago${st.festa === rv.grupo ? " festa" : ""}"><span class="selo-ok" aria-hidden="true">✓</span>
-        <h2>Pagamento confirmado!</h2><p>Seus números estão garantidos.</p>${nums}
+    if (s === "pago") return `<div class="pix"><div class="status pago${st.festa === rv.grupo ? " festa" : ""}"><span class="carimbo" aria-hidden="true">PAGO</span><span class="selo-ok" aria-hidden="true">✓</span>
+        <h2>Pagamento confirmado!</h2><p>Seus números estão garantidos.</p>${nums}<div class="picote" aria-hidden="true"></div>
         <p class="small">${rv.nome ? `Reservado para <b>${esc(rv.nome)}</b> · ` : ""}${brl(rv.total)} · código <b>${codigo(id + rv.grupo)}</b></p></div>
         <p class="small muted">Sorteio ${esc(r.data || "em data a definir")}, ${como}. Boa sorte! Se ganhar, ${esc(r.pixNome)} fala com você pelo WhatsApp. Guarde este link: ele mostra seus números quando quiser.</p>
         <button class="btn btn-main" data-act="mais">Escolher mais números</button><button class="btn" data-act="cartela">Ver a cartela</button></div>`;
     if (s === "expirado") return `<div class="pix"><div class="status expirado"><h2>Reserva expirada</h2>${nums}
         <p>O prazo para pagar acabou e esses números voltaram a ficar livres. Se você já pagou, mande o comprovante para ${esc(r.pixNome)}.</p></div>
         <button class="btn btn-main" data-act="mais">Escolher números de novo</button></div>`;
+    const falta = prazo(rv);
     return `<div class="pix"><div class="status aguardando"><span class="pulso" aria-hidden="true"></span><div><b>${s === "carregando" ? "Conferindo seu pedido…" : "Aguardando seu Pix"}</b>
-        <p class="small">${prazo(rv) || `Pague em até ${r.prazoHoras} h`}. Esta tela muda sozinha quando o pagamento for confirmado: pode deixar aberta ou voltar depois por este mesmo link.</p></div></div>
+        ${falta ? `<div class="relogio"><b>${falta}</b><small>para pagar</small></div>` : `<p class="small"><b>O prazo acabou</b>, mas o organizador ainda pode confirmar.</p>`}
+        <p class="small">Esta tela muda sozinha quando o pagamento for confirmado: pode deixar aberta ou voltar depois por este mesmo link.</p></div></div>
       ${nums}<span class="eyebrow muted">Pague com Pix</span><span class="valor">${brl(rv.total)}</span>
       <div id="qr" aria-label="QR Code do Pix"></div><span class="code" id="pixcode">${esc(rv.payload)}</span>
       <button class="btn btn-main" data-act="copiar">Copiar Pix copia e cola</button>
