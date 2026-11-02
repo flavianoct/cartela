@@ -16,8 +16,8 @@
 /* Bilhete destacável: cabeçalho índigo com o prêmio, picote, cartela de números e barra de reserva fixa embaixo */
 :root{
   --bg:#F4F3FB; --surface:#FFFFFF; --surface-2:#ECEBF7; --ink:#1B1838; --muted:#625E85; --line:#DAD8EC;
-  --indigo:#3F3DBC; --on-indigo:#FFFFFF; --coral:#FF6B57; --on-coral:#FFFFFF;
-  --ambar:#E8A33D; --ambar-soft:#FCEFD8; --erro:#D63B3B; --erro-soft:#FBE2E2; --qr:#FFFFFF;
+  --indigo:#3F3DBC; --on-indigo:#FFFFFF; --coral:#FF6B57; --on-coral:#2B0A04;
+  --ambar:#F0B429; --ambar-soft:#FFF1CC; --erro:#D63B3B; --erro-soft:#FBE2E2; --qr:#FFFFFF;
   --shadow:0 1px 2px rgba(27,24,56,.06),0 10px 30px rgba(27,24,56,.10);
   --f-display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
   --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -27,7 +27,7 @@
 @media (prefers-color-scheme:dark){:root{
   --bg:#100F1E; --surface:#1A1930; --surface-2:#24223F; --ink:#ECEAFB; --muted:#A4A0C8; --line:#322F55;
   --indigo:#8E8CF5; --on-indigo:#14123A; --coral:#FF8A78; --on-coral:#2B0A04;
-  --ambar:#F2B657; --ambar-soft:#3A2B12; --erro:#F27A7A; --erro-soft:#3E1C1C;
+  --ambar:#FFC857; --ambar-soft:#3A2E0A; --erro:#F27A7A; --erro-soft:#3E1C1C;
   --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 30px rgba(0,0,0,.4); color-scheme:dark}}
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -132,6 +132,13 @@ body{background-image:radial-gradient(900px 340px at 50% -120px,color-mix(in srg
 .skel{display:grid;gap:14px;padding:22px}
 .skel i{display:block;border-radius:12px;background:linear-gradient(90deg,var(--surface-2),var(--line),var(--surface-2));background-size:200% 100%;animation:brilho 1.3s linear infinite}
 @keyframes brilho{to{background-position:-200% 0}}
+@keyframes entra{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes sobe{from{transform:translateY(100%)}to{transform:none}}
+@keyframes pula{0%{transform:scale(1)}45%{transform:scale(1.18)}100%{transform:scale(1.05)}}
+.corpo>*{animation:entra .35s ease both}
+.cart{animation:sobe .28s cubic-bezier(.2,.8,.2,1) both}
+.n.sel{animation:pula .25s ease both}
+.bar i{transition:width .8s cubic-bezier(.2,.8,.2,1)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
