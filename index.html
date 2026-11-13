@@ -285,6 +285,13 @@ if (st.pedidos.length) { st.reserva = st.pedidos[st.pedidos.length - 1]; st.etap
 
 /* Situação de um pedido pelo que a cartela pública mostra: "pago", "aguardando", "expirado" ou "carregando". */
 const centavos = p => p.valorCent || Math.round(p.total * 100);
+/* Limite de números sem pagamento por pessoa (0 = sem limite): conta os pedidos deste aparelho que ainda aguardam o Pix. */
+function limiteRestante() {
+  const lim = +(st.rifa && st.rifa.limitePessoa) || 0;
+  if (!lim) return Infinity;
+  let pend = 0; for (const p of st.pedidos) if (["aguardando", "carregando"].includes(situacao(p))) pend += p.nums.length;
+  return Math.max(0, lim - pend);
+}
 function situacao(p) {
   if (!st.carregou) return "carregando";
   const meus = p.nums.map(n => st.info.get(n)).filter(d => d && (!d.v || d.v === centavos(p)));
@@ -369,6 +376,7 @@ else {
     ev.preventDefault();
     const f = new FormData(ev.target), nome = String(f.get("nome")).trim(), tel = String(f.get("tel")).trim();
     if (nome.length < 2 || tel.replace(/\D/g, "").length < 10) { st.erro = "Preencha seu nome e um WhatsApp com DDD."; render(); return }
+    if (st.sel.length > limiteRestante()) { st.erro = `Esta rifa permite até ${st.rifa.limitePessoa} números aguardando pagamento por pessoa.`; st.etapa = "grade"; render(); return }
     const nums = st.sel.slice().sort((a, b) => a - b);
     const grupo = codigo(nome + tel + Date.now());
     const base = Math.round(nums.length * st.rifa.preco * 100);
@@ -536,7 +544,11 @@ document.addEventListener("change", async e => {
 
 document.addEventListener("click", e => {
   const t = e.target.closest("button"); if (!t || !st.rifa) return;
-  if (t.dataset.n) { const n = +t.dataset.n, i = st.sel.indexOf(n); i < 0 ? st.sel.push(n) : st.sel.splice(i, 1); st.erro = ""; render() }
+  if (t.dataset.n) {
+    const n = +t.dataset.n, i = st.sel.indexOf(n);
+    if (i < 0 && st.sel.length >= limiteRestante()) { const lim = st.rifa.limitePessoa; toast(limiteRestante() ? `Esta rifa permite reservar até ${lim} números por vez. Pague os seus para escolher mais.` : `Você já tem ${lim} números aguardando o Pix. Pague para escolher mais.`); return }
+    i < 0 ? st.sel.push(n) : st.sel.splice(i, 1); st.erro = ""; render()
+  }
   else if (t.dataset.faixa) { st.faixa = +t.dataset.faixa; render() }
   else if (t.dataset.act === "form") { st.etapa = "form"; st.erro = ""; render(); $("#nome")?.focus() }
   else if (t.dataset.act === "voltar") { st.etapa = "grade"; render() }
