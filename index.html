@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cartela Pronta</title>
 <meta name="description" content="Escolha seus números na cartela da rifa. A Cartela Pronta só organiza os números.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src https://firestore.googleapis.com https://*.googleapis.com wss://firestore.googleapis.com; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="theme-color" content="#3F3DBC">
 <meta property="og:title" content="Cartela Pronta">
 <meta property="og:description" content="Escolha seus números na cartela da rifa.">
@@ -251,7 +252,7 @@ import { getFirestore, doc, collection, onSnapshot, writeBatch, serverTimestamp 
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const brl = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const brl = v => (Number(v) || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 const FAIXA = 200;
 
 /* ---------- Pix copia e cola (mesma regra do app) ---------- */
@@ -338,7 +339,8 @@ function meusNumeros() {
   return m;
 }
 
-const pad = n => String(n).padStart(String(st.rifa.qtd).length, "0");
+// Sempre número: o que vem do banco nunca entra como texto no HTML.
+const pad = n => String(Math.trunc(Number(n)) || 0).padStart(String(Math.trunc(Number(st.rifa.qtd)) || 0).length, "0");
 let tt; function toast(t) { const el = $("#toast"); el.textContent = t; el.hidden = false; clearTimeout(tt); tt = setTimeout(() => el.hidden = true, 2800) }
 
 function estado(titulo, texto) { $("#app").innerHTML = `<div class="estado"><h2>${esc(titulo)}</h2><p class="muted">${esc(texto)}</p></div>` }
