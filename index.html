@@ -56,6 +56,11 @@ button{cursor:pointer}
 .eyebrow{font-size:12px;letter-spacing:.07em;text-transform:uppercase;font-weight:600;opacity:.8}
 .t-head h1{font-size:30px;font-weight:800;letter-spacing:-.02em}
 .premio span{font-size:16px;font-weight:600;line-height:1.3}
+.foto-premio{display:block;width:100%;max-height:340px;object-fit:cover;border-radius:14px;background:color-mix(in srgb,var(--on-indigo) 10%,transparent)}
+.detalhes{margin:0 0 16px;display:flex;flex-direction:column;gap:10px}
+.detalhes h3{margin:0 0 2px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;opacity:.7}
+.detalhes p{margin:0;font-size:15px;line-height:1.45;white-space:pre-line;overflow-wrap:anywhere}
+.denuncia{display:block;text-align:center;margin:8px 0 0;font-size:12px;opacity:.75;color:inherit}
 .facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0}
 .facts div{background:color-mix(in srgb,var(--on-indigo) 10%,transparent);border-radius:12px;padding:9px 10px;min-width:0}
 .facts dt{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;opacity:.75}
@@ -241,6 +246,7 @@ body{background-image:radial-gradient(900px 340px at 50% -120px,color-mix(in srg
   <div class="topo"><div class="marca"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#3F3DBC"/><path d="M14 22h36v8a4 4 0 0 0 0 8v8H14v-8a4 4 0 0 0 0-8z" fill="#FF6B57"/><path d="M38 24v2m0 5v2m0 5v2m0 5v2" stroke="#3F3DBC" stroke-width="2.4" stroke-linecap="round"/></svg>Cartela Pronta</div><span class="selo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Pix direto<span class="longo">&nbsp;ao organizador</span></span></div>
   <article class="ticket" id="app"><div class="skel" aria-label="Carregando a rifa"><i style="height:26px;width:55%"></i><i style="height:44px"></i><i style="height:58px"></i><i style="height:180px"></i></div></article>
   <p class="rodape"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span><b>A Cartela Pronta só organiza os números.</b> Não vende, não arrecada e não promete nada: o combinado (prêmio, pagamento e entrega) é só entre você e o organizador desta rifa. Seu telefone só o organizador vê. <a href="privacidade.html" style="color:inherit;font-weight:700">Privacidade</a><br>A Cartela Pronta não é serviço do governo nem tem ligação com ele. Fontes oficiais: resultado da <a href="https://loterias.caixa.gov.br/Paginas/Federal.aspx" target="_blank" rel="noopener" style="color:inherit;font-weight:700">Loteria Federal (Caixa)</a> e informações sobre o <a href="https://www.bcb.gov.br/estabilidadefinanceira/pix" target="_blank" rel="noopener" style="color:inherit;font-weight:700">Pix (Banco Central)</a>.</span></p>
+  <a class="denuncia" id="denunciar" hidden>Denunciar esta rifa</a>
 </div>
 <div class="toast" id="toast" hidden role="status"></div>
 
@@ -248,12 +254,13 @@ body{background-image:radial-gradient(900px 340px at 50% -120px,color-mix(in srg
 <script type="module">
 import { firebaseConfig } from "./config.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, collection, onSnapshot, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, onSnapshot, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const brl = v => (Number(v) || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 const FAIXA = 200;
+const CONTATO = "flaviocoelhotoledo@gmail.com";
 
 /* ---------- Pix copia e cola (mesma regra do app) ---------- */
 const campo = (id, v) => id + String(v.length).padStart(2, "0") + v;
@@ -352,7 +359,7 @@ else {
   const ref = doc(db, "rifas", id);
   onSnapshot(ref, s => {
     if (!s.exists()) { estado("Rifa não encontrada", "Confira o link com o organizador."); return }
-    st.rifa = { id, ...s.data() }; render();
+    st.rifa = { id, ...s.data() }; render(); buscarFoto(ref);
   }, () => estado("Não deu para abrir a rifa", "Verifique sua internet e tente de novo."));
   onSnapshot(collection(ref, "numeros"), s => {
     st.info = new Map(s.docs.map(d => [+d.id, d.data()]));
@@ -405,16 +412,42 @@ else {
   };
 }
 
+/* Foto do prêmio: só é baixada quando a rifa tem foto, e de novo só se o organizador trocar. */
+let fotoPedida = 0;
+async function buscarFoto(ref) {
+  const v = Number(st.rifa.fotoV) || 0;
+  if (v === fotoPedida) return;
+  fotoPedida = v;
+  if (!v) { st.foto = ""; render(); return }
+  try {
+    const img = (await getDoc(doc(ref, "midia", "premio"))).data()?.img || "";
+    // Só aceita imagem JPEG embutida: nada de endereço de fora nem de outro tipo de conteúdo.
+    st.foto = /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(img) ? img : "";
+  } catch (e) { st.foto = ""; fotoPedida = 0 }
+  render();
+}
+
+/* Textos opcionais do organizador, sempre como texto puro. */
+function detalhes(r) {
+  const itens = [["Motivo da rifa", r.motivo], ["Sobre o prêmio", r.descricao], ["Como o ganhador recebe", r.entrega]]
+    .filter(([, t]) => typeof t === "string" && t.trim());
+  return itens.length ? `<section class="detalhes">${itens.map(([h, t]) => `<div><h3>${h}</h3><p>${esc(t.trim())}</p></div>`).join("")}</section>` : "";
+}
+
 /* ---------- telas ---------- */
 function render() {
   const r = st.rifa; if (!r) return;
   const usados = st.ocupados.size, metodo = r.metodo === "federal" ? `<a href="https://loterias.caixa.gov.br/Paginas/Federal.aspx" target="_blank" rel="noopener" style="color:inherit">Loteria Federal</a>` : "No app";
   const sorteada = r.status === "sorteada", restam = r.qtd - usados, pct = Math.round(usados / r.qtd * 100);
   $("#app").innerHTML = `<header class="t-head"><div class="deco" aria-hidden="true"><span>07</span><span>21</span><span>42</span></div><div class="t-top"><span class="eyebrow">Rifa de ${esc(r.pixNome)}</span><span class="chip${sorteada ? " done" : ""}">${sorteada ? "Sorteada" : "Aberta"}</span></div>
-    <h1>${esc(r.nome)}</h1><div class="premio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M5 12v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg><span>${esc(r.premio)}</span></div>
+    <h1>${esc(r.nome)}</h1>${st.foto ? `<img class="foto-premio" src="${st.foto}" alt="Foto do prêmio: ${esc(r.premio)}">` : ""}<div class="premio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M5 12v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg><span>${esc(r.premio)}</span></div>
     <dl class="facts"><div><dt>Cada número</dt><dd>${brl(r.preco)}</dd></div><div><dt>Sorteio</dt><dd>${esc(r.data || "a definir")}</dd></div><div><dt>Como</dt><dd>${metodo}</dd></div></dl>
     <div><div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${(usados / r.qtd * 100).toFixed(2)}%"></i></div><p class="small">${sorteada ? `${usados} de ${r.qtd} números vendidos` : `<b>${restam} números livres</b> · ${pct}% já escolhidos`}</p></div></header>
-    <div class="perf" aria-hidden="true"></div><div class="corpo">${sorteada ? "" : passos()}${corpo(r)}</div>`;
+    <div class="perf" aria-hidden="true"></div><div class="corpo">${st.etapa === "grade" || sorteada ? detalhes(r) : ""}${sorteada ? "" : passos()}${corpo(r)}</div>`;
+  // Denúncia de conteúdo (foto ou texto impróprio): vai por e-mail, com o código da rifa.
+  const den = $("#denunciar");
+  den.hidden = false;
+  den.href = `mailto:${CONTATO}?subject=${encodeURIComponent("Denúncia de rifa " + id)}&body=${encodeURIComponent("Explique o problema com esta rifa:\n\n" + location.href)}`;
   const el = $("#qr");
   if (el && st.reserva && window.QRCode) {
     el.innerHTML = "";
